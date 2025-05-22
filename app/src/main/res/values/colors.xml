@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bordo_200">#B76E79</color>       <!-- Claro -->
+    <color name="bordo_500">#7B2641</color>       <!-- Principal -->
+    <color name="bordo_700">#4A0D22</color>       <!-- Oscuro -->
+
+    <!-- Colores complementarios -->
+    <color name="gris_claro">#F5F5F5</color>
+    <color name="gris_oscuro">#333333</color>
+    <color name="blanco">#FFFFFF</color>
+    <color name="negro">#000000</color>
+</resources>
