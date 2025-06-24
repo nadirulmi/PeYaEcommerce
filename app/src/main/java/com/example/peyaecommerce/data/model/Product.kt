@@ -5,4 +5,8 @@ data class Product(
     val precio: Double,
     val imagenResId: Int,
     val categoria: String
-)
+) {
+    val destacado: Boolean
+        get() = precio > 100
+
+}

@@ -60,6 +60,7 @@ dependencies {
 
     // Hilt (inyección de dependencias)
     implementation(libs.hilt.android)
+    implementation(libs.androidx.material3.android)
     kapt(libs.hilt.compiler)
 
     // Retrofit con Gson
@@ -89,7 +90,7 @@ dependencies {
 
     // Compose UI
     implementation("androidx.compose.ui:ui:1.6.4")
-    implementation("androidx.compose.material3:material3:1.2.1")
+    implementation("androidx.compose.material3:material3:1.2.0")
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.4")
 
     // Activity para Compose

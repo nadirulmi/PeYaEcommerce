@@ -1,5 +1,7 @@
 package com.example.peyaecommerce.view.ui.views
 
+import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.DropdownMenu
@@ -22,57 +24,105 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.remember
 import com.example.peyaecommerce.view.viewmodel.ProductListViewModel
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun ProductCatalogScreen(navController: NavHostController, viewModel: ProductListViewModel = viewModel()) {
+fun ProductCatalogScreen(
+    navController: NavHostController,
+    viewModel: ProductListViewModel
+) {
     val products = viewModel.filteredProducts
     val searchQuery = viewModel.searchQuery
     val selectedCategory = viewModel.selectedCategory
     val priceOrder = viewModel.priceOrder
 
-    Column(modifier = Modifier.padding(16.dp)) {
-
-        // Buscador
-        OutlinedTextField(
-            value = searchQuery,
-            onValueChange = { viewModel.onSearchQueryChange(it) },
-            label = { Text("Buscar producto") },
-            modifier = Modifier.fillMaxWidth()
-        )
+    Column{
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = Color(0xFF4A0D22),
+                    shape = RoundedCornerShape(
+                        bottomStart = 16.dp,
+                        bottomEnd = 16.dp
+                    )
+                )
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+        ) {
+            SearchBar(
+                query = searchQuery,
+                onQueryChange = { viewModel.onSearchQueryChange(it) }
+            )
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         // Filtros
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            // Categoría
-            DropdownMenuFiltro(
-                label = "Categoría",
-                options = listOf("Todos", "Comida"),
-                selected = selectedCategory,
-                onSelected = { viewModel.onCategorySelected(it) }
-            )
-
-            // Precio
-            DropdownMenuFiltro(
-                label = "Precio",
-                options = listOf("Ninguno", "Ascendente", "Descendente"),
-                selected = priceOrder,
-                onSelected = { viewModel.onPriceOrderSelected(it) }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LazyColumn {
-            items(products) { product ->
-                ProductCard(product = product)
-                Spacer(modifier = Modifier.height(8.dp))
+//        Row(
+//            modifier = Modifier.fillMaxWidth(),
+//            horizontalArrangement = Arrangement.SpaceBetween
+//        ) {
+//            // Categoría
+//            DropdownMenuFiltro(
+//                label = "Categoría",
+//                options = listOf("Todos", "Comida"),
+//                selected = selectedCategory,
+//                onSelected = { viewModel.onCategorySelected(it) }
+//            )
+//
+//            // Precio
+//            DropdownMenuFiltro(
+//                label = "Precio",
+//                options = listOf("Ninguno", "Ascendente", "Descendente"),
+//                selected = priceOrder,
+//                onSelected = { viewModel.onPriceOrderSelected(it) }
+//            )
+//        }
+//
+//        Spacer(modifier = Modifier.height(16.dp))
+        Column(modifier = Modifier.padding(14.dp)) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(products) { product ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(260.dp)
+                    ) {
+                        ProductCard(
+                            product = product,
+                            onAddClick = {
+                                println("Agregado: ${product.nombre}")
+                                viewModel.addToCart(product)
+                                Log.d("Carrito", "Items agregado: ${product}")
+                            }
+                        )
+                    }
+                }
             }
         }
+
     }
 }
 
@@ -102,6 +152,42 @@ fun DropdownMenuFiltro(
         }
     }
 }
+
+@Composable
+fun SearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit
+) {
+    TextField(
+        value = query,
+        onValueChange = onQueryChange,
+        placeholder = { Text("Buscar producto") },
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Buscar"
+            )
+        },
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            disabledContainerColor = Color.White,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        ),
+        shape = RoundedCornerShape(50),
+        maxLines = 1,
+        modifier = Modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 50.dp)
+            .padding(2.dp)
+    )
+}
+
+
+
+
 
 
 

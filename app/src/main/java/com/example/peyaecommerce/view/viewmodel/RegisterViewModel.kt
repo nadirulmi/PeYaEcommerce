@@ -23,7 +23,6 @@ class RegisterViewModel : ViewModel(){
     var isButtonEnabled by mutableStateOf(false)
     var registrationMessage by mutableStateOf<String?>(null)
 
-    // Nuevas variables para saber si el usuario ya tocó los campos
     private var hasFullNameBeenTouched by mutableStateOf(false)
     private var hasEmailBeenTouched by mutableStateOf(false)
     private var hasPasswordBeenTouched by mutableStateOf(false)

@@ -18,7 +18,6 @@ class LoginViewModel : ViewModel() {
     var isButtonEnabled by mutableStateOf(false)
     var loginMessage by mutableStateOf<String?>(null)
 
-    // Nuevas variables para saber si el usuario ya tocó los campos
     private var hasEmailBeenTouched by mutableStateOf(false)
     private var hasPasswordBeenTouched by mutableStateOf(false)
 
