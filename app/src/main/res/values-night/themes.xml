@@ -11,7 +11,8 @@
         <item name="colorSecondaryVariant">@color/bordo_500</item>
         <item name="colorOnSecondary">@color/blanco</item>
 
-        <!-- Status bar -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Status bar transparente y con iconos oscuros -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>

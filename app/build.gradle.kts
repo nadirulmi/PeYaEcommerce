@@ -1,8 +1,17 @@
+import java.util.Properties
+
 plugins {
+    id("com.google.dagger.hilt.android") version "2.56.2"
+    kotlin("kapt")
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.compose.compiler)
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
 }
 
 android {
@@ -17,6 +26,24 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "CLOUDINARY_CLOUD_NAME",
+            "\"${localProperties["CLOUDINARY_CLOUD_NAME"]}\""
+        )
+
+        buildConfigField(
+            "String",
+            "CLOUDINARY_API_KEY",
+            "\"${localProperties["CLOUDINARY_API_KEY"]}\""
+        )
+
+        buildConfigField(
+            "String",
+            "CLOUDINARY_API_SECRET",
+            "\"${localProperties["CLOUDINARY_API_SECRET"]}\""
+        )
     }
 
     buildTypes {
@@ -37,6 +64,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {
@@ -58,10 +86,7 @@ dependencies {
     implementation("androidx.fragment:fragment:1.8.7")
     implementation("androidx.cardview:cardview:1.0.0")
 
-    // Hilt (inyección de dependencias)
-    implementation(libs.hilt.android)
     implementation(libs.androidx.material3.android)
-    kapt(libs.hilt.compiler)
 
     // Retrofit con Gson
     implementation(libs.retrofit)
@@ -104,9 +129,20 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
+    //Hilt
+    implementation("com.google.dagger:hilt-android:2.56.2")
+    kapt("com.google.dagger:hilt-android-compiler:2.56.2")
 
+    //Cloudinary
+    implementation("com.cloudinary:cloudinary-android:2.3.1")
 
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")
+
+    //Lottie for animations
+    implementation("com.airbnb.android:lottie-compose:6.4.0")
 
 }

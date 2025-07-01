@@ -1,9 +1,7 @@
-package com.example.peyaecommerce.view.ui.views
+package com.example.peyaecommerce.view.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,7 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.peyaecommerce.data.model.Product
+import com.example.peyaecommerce.model.Product
 
 @Composable
 fun ProductCard(product: Product, onAddClick: () -> Unit) {

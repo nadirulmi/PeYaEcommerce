@@ -1,4 +1,4 @@
-package com.example.peyaecommerce.view.ui
+package com.example.peyaecommerce.navigation
 
 import BottomBar
 import androidx.compose.foundation.layout.padding
@@ -18,8 +18,13 @@ import com.example.peyaecommerce.view.ui.views.ProductCatalogScreen
 import com.example.peyaecommerce.view.ui.views.ProfileScreen
 import com.example.peyaecommerce.view.ui.views.RegisterScreen
 import com.example.peyaecommerce.view.viewmodel.ProductListViewModel
+import com.example.peyaecommerce.view.viewmodel.ProfileViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.peyaecommerce.view.ui.views.SplashScreen
+import com.example.peyaecommerce.view.viewmodel.CartViewModel
 
 object Routes {
+    const val SPLASH = "splash"
     const val LOGIN = "login"
     const val REGISTER = "register"
     const val HOME = "home"
@@ -35,6 +40,7 @@ fun AppNavigation() {
 
     val currentRoute = navBackStackEntry?.destination?.route
     val showBottomBarRoutes = listOf(Routes.HOME, Routes.CART, Routes.PROFILE)
+    val cartViewModel: CartViewModel = hiltViewModel()
 
     Scaffold(
         bottomBar = {
@@ -45,26 +51,31 @@ fun AppNavigation() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Routes.LOGIN,
+            startDestination = Routes.SPLASH,
             modifier = Modifier.padding(innerPadding)
         ) {
+            composable(Routes.SPLASH) {
+                SplashScreen(
+                    onAnimationFinished = {
+                        navController.navigate(Routes.LOGIN) {
+                            popUpTo(Routes.SPLASH) { inclusive = true }
+                        }
+                    }
+                )
+            }
             composable(Routes.LOGIN) { LoginScreen(navController) }
             composable(Routes.REGISTER) { RegisterScreen(navController) }
             composable(Routes.HOME) {
-                ProductCatalogScreen(
-                    navController = navController,
-                    viewModel = productListViewModel
-                )
+                ProductCatalogScreen(navController, cartViewModel = cartViewModel)
             }
             composable(Routes.CART) {
-                CartScreen(
-                    navController = navController,
-                    viewModel = productListViewModel
-                )
+                CartScreen(navController, cartViewModel = cartViewModel)
             }
-            composable(Routes.PROFILE){
+            composable(Routes.PROFILE) { backStackEntry ->
+                val profileViewModel: ProfileViewModel = hiltViewModel(backStackEntry)
                 ProfileScreen(
                     navController = navController,
+                    profileViewModel = profileViewModel
                 )
             }
         }

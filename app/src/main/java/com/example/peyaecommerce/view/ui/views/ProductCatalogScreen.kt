@@ -8,51 +8,43 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.remember
 import com.example.peyaecommerce.view.viewmodel.ProductListViewModel
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.example.peyaecommerce.view.ui.components.ProductCard
+import com.example.peyaecommerce.view.viewmodel.CartViewModel
 
 @Composable
 fun ProductCatalogScreen(
-    navController: NavHostController,
-    viewModel: ProductListViewModel
+    navController: NavController,
+    productListViewModel: ProductListViewModel = hiltViewModel(),
+    cartViewModel: CartViewModel = hiltViewModel()
 ) {
-    val products = viewModel.filteredProducts
-    val searchQuery = viewModel.searchQuery
-    val selectedCategory = viewModel.selectedCategory
-    val priceOrder = viewModel.priceOrder
+    val products = productListViewModel.filteredProducts
+    val searchQuery = productListViewModel.searchQuery
+    val selectedCategory = productListViewModel.selectedCategory
+    val priceOrder = productListViewModel.priceOrder
 
     Column{
         Box(
@@ -69,7 +61,7 @@ fun ProductCatalogScreen(
         ) {
             SearchBar(
                 query = searchQuery,
-                onQueryChange = { viewModel.onSearchQueryChange(it) }
+                onQueryChange = { productListViewModel.onSearchQueryChange(it) }
             )
         }
 
@@ -114,7 +106,7 @@ fun ProductCatalogScreen(
                             product = product,
                             onAddClick = {
                                 println("Agregado: ${product.nombre}")
-                                viewModel.addToCart(product)
+                                cartViewModel.addToCart(product)
                                 Log.d("Carrito", "Items agregado: ${product}")
                             }
                         )

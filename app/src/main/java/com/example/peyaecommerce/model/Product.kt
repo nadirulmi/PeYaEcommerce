@@ -1,4 +1,4 @@
-package com.example.peyaecommerce.data.model
+package com.example.peyaecommerce.model
 
 data class Product(
     val nombre: String,
@@ -8,5 +8,6 @@ data class Product(
 ) {
     val destacado: Boolean
         get() = precio > 100
+
 
 }

@@ -76,6 +76,7 @@ fun LoginScreen(
                 .padding(24.dp)
                 .fillMaxWidth(0.9f),
             horizontalAlignment = Alignment.CenterHorizontally
+
         ) {
             Text(
                 "Iniciar sesión",

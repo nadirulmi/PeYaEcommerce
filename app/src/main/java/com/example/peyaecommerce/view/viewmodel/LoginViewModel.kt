@@ -8,7 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
-// LoginViewModel hereda de AndroidViewModel que es un ViewModel con acceso al Application
 class LoginViewModel : ViewModel() {
 
     var email by mutableStateOf("")

@@ -12,7 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.peyaecommerce.view.ui.Routes
+import com.example.peyaecommerce.navigation.Routes
 
 @Composable
 fun BottomBar(navController: NavController) {
