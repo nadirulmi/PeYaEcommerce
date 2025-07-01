@@ -1,6 +1,7 @@
 package com.example.peyaecommerce.model
 
 data class Product(
+    val id: Int? = 0,
     val nombre: String,
     val precio: Double,
     val imagenResId: Int,

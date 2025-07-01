@@ -20,6 +20,7 @@ import com.example.peyaecommerce.view.ui.views.RegisterScreen
 import com.example.peyaecommerce.view.viewmodel.ProductListViewModel
 import com.example.peyaecommerce.view.viewmodel.ProfileViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.peyaecommerce.view.ui.views.OrderHistoryScreen
 import com.example.peyaecommerce.view.ui.views.SplashScreen
 import com.example.peyaecommerce.view.viewmodel.CartViewModel
 
@@ -30,6 +31,7 @@ object Routes {
     const val HOME = "home"
     const val CART = "cart"
     const val PROFILE = "profile"
+    const val ORDER_HISTORY = "order_history"
 }
 
 @Composable
@@ -39,7 +41,7 @@ fun AppNavigation() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     val currentRoute = navBackStackEntry?.destination?.route
-    val showBottomBarRoutes = listOf(Routes.HOME, Routes.CART, Routes.PROFILE)
+    val showBottomBarRoutes = listOf(Routes.HOME, Routes.CART, Routes.PROFILE, Routes.ORDER_HISTORY)
     val cartViewModel: CartViewModel = hiltViewModel()
 
     Scaffold(
@@ -77,6 +79,9 @@ fun AppNavigation() {
                     navController = navController,
                     profileViewModel = profileViewModel
                 )
+            }
+            composable(Routes.ORDER_HISTORY) {
+                OrderHistoryScreen(navController, hiltViewModel())
             }
         }
     }

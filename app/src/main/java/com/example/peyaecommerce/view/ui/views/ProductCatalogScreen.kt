@@ -32,6 +32,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.peyaecommerce.model.mappers.toProduct
 import com.example.peyaecommerce.view.ui.components.ProductCard
 import com.example.peyaecommerce.view.viewmodel.CartViewModel
 
@@ -96,7 +97,8 @@ fun ProductCatalogScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(products) { product ->
+                items(products) { productEntity ->
+                    val product = productEntity.toProduct()
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()

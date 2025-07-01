@@ -1,6 +1,8 @@
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +24,8 @@ fun BottomBar(navController: NavController) {
     val items = listOf(
         Triple(Icons.Filled.Home, Routes.HOME, "Inicio"),
         Triple(Icons.Filled.ShoppingCart, Routes.CART, "Carrito"),
-        Triple(Icons.Filled.Person, Routes.PROFILE, "Perfil")
+        Triple(Icons.Filled.Person, Routes.PROFILE, "Perfil"),
+        Triple(Icons.Filled.ShoppingBag, Routes.ORDER_HISTORY, "Historial")
     )
 
     NavigationBar(

@@ -112,7 +112,9 @@ fun CartScreen(
                                 .fillMaxWidth(),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF800020)),
                             shape = RoundedCornerShape(8.dp),
-                            onClick = { }
+                            onClick = {
+                                cartViewModel.checkout()
+                            }
                         ) {
                             Text("Check out")
                         }
@@ -181,7 +183,6 @@ fun EmptyCard(navController: NavHostController) {
                     shape = RoundedCornerShape(50),
                     modifier = Modifier
                         .fillMaxWidth()
-
                 ) {
                     Text(text = "Ir a la tienda")
                 }

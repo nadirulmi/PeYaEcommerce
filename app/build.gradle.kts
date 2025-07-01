@@ -145,4 +145,7 @@ dependencies {
     //Lottie for animations
     implementation("com.airbnb.android:lottie-compose:6.4.0")
 
+    //Room
+    implementation(libs.room.runtime)
+    kapt("androidx.room:room-compiler:2.7.2")
 }

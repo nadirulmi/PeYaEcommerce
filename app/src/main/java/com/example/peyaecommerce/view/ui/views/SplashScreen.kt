@@ -1,5 +1,6 @@
 package com.example.peyaecommerce.view.ui.views
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Restaurant
@@ -13,8 +14,12 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import com.airbnb.lottie.compose.*
 import com.example.peyaecommerce.R
+import com.example.peyaecommerce.model.data.ProductDataBase
+import com.example.peyaecommerce.model.data.populateDatabaseIfEmpty
+import kotlinx.coroutines.flow.firstOrNull
 
 @Composable
 fun SplashScreen(
@@ -24,9 +29,12 @@ fun SplashScreen(
         LottieCompositionSpec.RawRes(R.raw.animation_food)
     )
     val animatable = rememberLottieAnimatable()
+    val context = LocalContext.current
 
     LaunchedEffect(composition) {
         if (composition != null) {
+            populateDatabaseIfEmpty(context)
+
             animatable.animate(
                 composition = composition,
                 iterations = 1,
@@ -49,3 +57,4 @@ fun SplashScreen(
         )
     }
 }
+
