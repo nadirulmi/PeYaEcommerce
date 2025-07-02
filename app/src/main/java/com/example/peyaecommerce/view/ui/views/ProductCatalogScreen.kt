@@ -32,7 +32,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.peyaecommerce.model.mappers.toProduct
+import com.example.peyaecommerce.model.database.mappers.toProduct
 import com.example.peyaecommerce.view.ui.components.ProductCard
 import com.example.peyaecommerce.view.viewmodel.CartViewModel
 

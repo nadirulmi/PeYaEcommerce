@@ -1,6 +1,5 @@
 package com.example.peyaecommerce.view.ui.views
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -32,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.example.peyaecommerce.model.CartItem
+import com.example.peyaecommerce.model.models.CartItem
 import com.example.peyaecommerce.view.viewmodel.CartViewModel
 
 @Composable

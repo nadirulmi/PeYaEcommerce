@@ -1,4 +1,4 @@
-package com.example.peyaecommerce.model
+package com.example.peyaecommerce.model.models
 
 data class Profile(
     val name: String = "",

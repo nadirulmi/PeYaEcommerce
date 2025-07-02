@@ -1,7 +1,7 @@
-package com.example.peyaecommerce.model.mappers
+package com.example.peyaecommerce.model.database.mappers
 
-import com.example.peyaecommerce.model.CartItem
-import com.example.peyaecommerce.model.data.CartItemEntity
+import com.example.peyaecommerce.model.models.CartItem
+import com.example.peyaecommerce.model.database.entities.CartItemEntity
 
 fun CartItem.toEntity(): CartItemEntity = CartItemEntity(
     productId = product.id ?: 0,

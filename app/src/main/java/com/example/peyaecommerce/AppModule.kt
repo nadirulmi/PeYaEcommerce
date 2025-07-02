@@ -1,12 +1,12 @@
 package com.example.peyaecommerce
 
 import android.content.Context
-import com.example.peyaecommerce.model.data.CartDao
-import com.example.peyaecommerce.model.data.OrderDao
-import com.example.peyaecommerce.model.data.ProductDao
-import com.example.peyaecommerce.model.data.ProductDataBase
+import com.example.peyaecommerce.model.database.dao.CartDao
+import com.example.peyaecommerce.model.database.dao.OrderDao
+import com.example.peyaecommerce.model.database.dao.ProductDao
+import com.example.peyaecommerce.model.database.ProductDataBase
 import com.example.peyaecommerce.model.data.ProfileData
-import com.example.peyaecommerce.model.data.ProfileDataSource
+import com.example.peyaecommerce.model.repository.ProfileDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

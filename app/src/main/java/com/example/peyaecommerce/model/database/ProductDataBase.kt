@@ -1,9 +1,16 @@
-package com.example.peyaecommerce.model.data
+package com.example.peyaecommerce.model.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.peyaecommerce.model.database.dao.CartDao
+import com.example.peyaecommerce.model.database.dao.OrderDao
+import com.example.peyaecommerce.model.database.dao.ProductDao
+import com.example.peyaecommerce.model.database.entities.CartItemEntity
+import com.example.peyaecommerce.model.database.entities.OrderEntity
+import com.example.peyaecommerce.model.database.entities.OrderItemEntity
+import com.example.peyaecommerce.model.database.entities.ProductEntity
 
 @Database(
     entities = [ProductEntity::class, CartItemEntity::class, OrderEntity::class, OrderItemEntity::class],

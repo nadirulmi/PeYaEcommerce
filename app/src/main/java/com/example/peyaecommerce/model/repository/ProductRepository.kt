@@ -1,7 +1,7 @@
 package com.example.peyaecommerce.model.repository
 
 import com.example.peyaecommerce.R
-import com.example.peyaecommerce.model.Product
+import com.example.peyaecommerce.model.models.Product
 
 object ProductRepository {
     val products = listOf(

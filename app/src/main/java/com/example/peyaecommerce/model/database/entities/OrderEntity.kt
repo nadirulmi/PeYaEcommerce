@@ -1,4 +1,4 @@
-package com.example.peyaecommerce.model.data
+package com.example.peyaecommerce.model.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

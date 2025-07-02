@@ -1,7 +1,7 @@
-package com.example.peyaecommerce.model.mappers
+package com.example.peyaecommerce.model.database.mappers
 
-import com.example.peyaecommerce.model.Product
-import com.example.peyaecommerce.model.data.ProductEntity
+import com.example.peyaecommerce.model.models.Product
+import com.example.peyaecommerce.model.database.entities.ProductEntity
 
 fun Product.toEntity(): ProductEntity {
     return ProductEntity(

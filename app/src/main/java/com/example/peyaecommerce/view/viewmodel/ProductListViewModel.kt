@@ -1,19 +1,14 @@
 package com.example.peyaecommerce.view.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.peyaecommerce.model.Product
-import com.example.peyaecommerce.model.data.ProductDataBase
-import com.example.peyaecommerce.model.data.ProductEntity
-import com.example.peyaecommerce.model.repository.ProductRepository
+import com.example.peyaecommerce.model.database.ProductDataBase
+import com.example.peyaecommerce.model.database.entities.ProductEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch

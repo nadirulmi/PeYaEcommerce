@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.peyaecommerce.model.relations.OrderWithItems
+import com.example.peyaecommerce.model.database.relations.OrderWithItems
 import com.example.peyaecommerce.view.viewmodel.OrderHistoryViewModel
 import java.text.SimpleDateFormat
 import java.util.Date

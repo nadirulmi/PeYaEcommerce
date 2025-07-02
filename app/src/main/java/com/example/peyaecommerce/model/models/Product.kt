@@ -1,4 +1,4 @@
-package com.example.peyaecommerce.model
+package com.example.peyaecommerce.model.models
 
 data class Product(
     val id: Int? = 0,

@@ -19,7 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.peyaecommerce.model.Product
+import com.example.peyaecommerce.model.models.Product
 
 @Composable
 fun ProductCard(product: Product, onAddClick: () -> Unit) {

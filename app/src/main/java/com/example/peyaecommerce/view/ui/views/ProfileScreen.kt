@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,6 +25,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import android.graphics.ImageDecoder
+import android.os.Build
+import android.provider.MediaStore
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -55,7 +56,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.text.style.TextAlign
-import com.example.peyaecommerce.model.Profile
+import com.example.peyaecommerce.model.models.Profile
 
 @Composable
 fun ProfileScreen(
@@ -152,15 +153,24 @@ fun ProfileScreen(
                             .clickable { imagePickerLauncher.launch("image/*") },
                     ) {
                         val bitmap = remember(imageUri) {
-                            val source = ImageDecoder.createSource(context.contentResolver, imageUri!!)
-                            ImageDecoder.decodeBitmap(source)
+                            imageUri?.let { uri ->
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                    val source =
+                                        ImageDecoder.createSource(context.contentResolver, uri)
+                                    ImageDecoder.decodeBitmap(source)
+                                } else {
+                                    MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+                                }
+                            }
                         }
-                        Image(
-                            bitmap = bitmap.asImageBitmap(),
-                            contentDescription = "Profile Image",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        bitmap?.let {
+                            Image(
+                                bitmap = it.asImageBitmap(),
+                                contentDescription = "Profile Image",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
                     }
                 } else if (profile.image.isNotEmpty()) {
                     AsyncImage(

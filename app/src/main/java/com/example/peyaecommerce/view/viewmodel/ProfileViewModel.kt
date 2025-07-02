@@ -4,11 +4,10 @@ import android.app.Application
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cloudinary.Cloudinary
-import com.example.peyaecommerce.model.data.ProfileDataSource
-import com.example.peyaecommerce.model.Profile
+import com.example.peyaecommerce.model.repository.ProfileDataSource
+import com.example.peyaecommerce.model.models.Profile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
