@@ -47,6 +47,10 @@ fun ProductCatalogScreen(
     val selectedCategory = productListViewModel.selectedCategory
     val priceOrder = productListViewModel.priceOrder
 
+    LaunchedEffect(Unit) {
+        productListViewModel.startCollecting()
+    }
+
     Column{
         Box(
             modifier = Modifier

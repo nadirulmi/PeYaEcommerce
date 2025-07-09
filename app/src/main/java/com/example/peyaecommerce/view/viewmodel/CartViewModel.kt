@@ -31,7 +31,7 @@ class CartViewModel @Inject constructor(
     val totalAmount: Double
         get() = cartItems.sumOf { it.product.precio * it.quantity }
 
-    init {
+    fun startCollectingCart() {
         viewModelScope.launch {
             cartDao.getAllItems().collect { entities ->
                 cartItems = entities.map { entity ->
@@ -50,9 +50,6 @@ class CartViewModel @Inject constructor(
             }
         }
     }
-
-
-
     fun addToCart(product: Product) {
         val existingItem = cartItems.find { it.product == product }
         if (existingItem != null) {

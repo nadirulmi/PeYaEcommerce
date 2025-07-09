@@ -30,7 +30,7 @@ class ProductListViewModel @Inject constructor(
     var selectedCategory by mutableStateOf("Todos")
     var priceOrder by mutableStateOf("Ninguno")
 
-    init {
+    fun startCollecting() {
         viewModelScope.launch {
             productsFlow.collect { products ->
                 filterProducts(products)
