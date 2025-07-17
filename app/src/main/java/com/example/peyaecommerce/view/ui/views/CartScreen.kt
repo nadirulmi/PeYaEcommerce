@@ -1,5 +1,6 @@
 package com.example.peyaecommerce.view.ui.views
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -200,6 +201,7 @@ fun CartItemRow(
     onRemove: () -> Unit,
     onQuantityChange: (Int) -> Unit
 ) {
+    Log.d("CartItem", "Product: ${item.product}")
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -212,8 +214,8 @@ fun CartItemRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
-                model = item.product.imagenResId,
-                contentDescription = item.product.nombre,
+                model = item.product.imageUrl,
+                contentDescription = item.product.name,
                 modifier = Modifier
                     .size(80.dp)
                     .clip(RoundedCornerShape(8.dp)),
@@ -225,9 +227,9 @@ fun CartItemRow(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                Text(item.product.nombre, style = MaterialTheme.typography.titleMedium)
+                Text(item.product.name, style = MaterialTheme.typography.titleMedium)
                 Text(
-                    "$${item.product.precio}",
+                    "$${item.product.price}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )

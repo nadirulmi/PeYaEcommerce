@@ -1,14 +1,12 @@
 package com.example.peyaecommerce.model.models
 
 data class Product(
-    val id: Int? = 0,
-    val nombre: String,
-    val precio: Double,
-    val imagenResId: Int,
-    val categoria: String
-) {
-    val destacado: Boolean
-        get() = precio > 100
-
-
-}
+    val id: String? = null,
+    val name: String,
+    val price: Double,
+    val imageResId: Int = 0,
+    val category: String,
+    val imageUrl: String? = null,
+    val hasDrink: Boolean = false,
+    val description: String? = null
+)

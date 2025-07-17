@@ -13,4 +13,5 @@ class OrderHistoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     val orders: Flow<List<OrderWithItems>> = orderDao.getAllOrders()
+
 }

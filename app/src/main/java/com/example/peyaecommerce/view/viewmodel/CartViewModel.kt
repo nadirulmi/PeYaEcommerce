@@ -7,12 +7,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.peyaecommerce.model.data.remote.FoodDto
 import com.example.peyaecommerce.model.models.CartItem
 import com.example.peyaecommerce.model.models.Product
 import com.example.peyaecommerce.model.database.entities.OrderEntity
 import com.example.peyaecommerce.model.database.entities.OrderItemEntity
 import com.example.peyaecommerce.model.database.ProductDataBase
 import com.example.peyaecommerce.model.database.mappers.toEntity
+import com.example.peyaecommerce.model.database.mappers.toProduct
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,7 +31,7 @@ class CartViewModel @Inject constructor(
         private set
 
     val totalAmount: Double
-        get() = cartItems.sumOf { it.product.precio * it.quantity }
+        get() = cartItems.sumOf { it.product.price * it.quantity }
 
     fun startCollectingCart() {
         viewModelScope.launch {
@@ -38,10 +40,11 @@ class CartViewModel @Inject constructor(
                     CartItem(
                         product = Product(
                             id = entity.productId,
-                            nombre = entity.nombre,
-                            categoria = entity.categoria,
-                            precio = entity.precio,
-                            imagenResId = entity.imagenResId
+                            name = entity.nombre,
+                            category = entity.categoria,
+                            price = entity.precio,
+                            imageResId = entity.imagenResId,
+                            imageUrl = entity.imageUrl
                         ),
                         quantity = entity.cantidad
                     )
@@ -50,6 +53,7 @@ class CartViewModel @Inject constructor(
             }
         }
     }
+
     fun addToCart(product: Product) {
         val existingItem = cartItems.find { it.product == product }
         if (existingItem != null) {
@@ -67,7 +71,7 @@ class CartViewModel @Inject constructor(
 
     fun removeFromCart(product: Product) {
         viewModelScope.launch {
-            cartDao.deleteByProductId(product.id ?: 0)
+            cartDao.deleteByProductId(product.id ?: "")
             cartItems = cartItems.filter { it.product != product }
         }
     }
@@ -95,11 +99,11 @@ class CartViewModel @Inject constructor(
                 val items = cartItems.map { cartItem ->
                     OrderItemEntity(
                         orderId = orderId,
-                        productId = cartItem.product.id ?: 0,
-                        nombre = cartItem.product.nombre,
-                        precio = cartItem.product.precio,
+                        productId = cartItem.product.id ?: "",
+                        nombre = cartItem.product.name,
+                        precio = cartItem.product.price,
                         cantidad = cartItem.quantity,
-                        imagenResId = cartItem.product.imagenResId
+                        imagenResId = cartItem.product.imageResId
                     )
                 }
                 orderDao.insertOrderItems(items)

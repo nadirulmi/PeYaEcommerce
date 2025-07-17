@@ -14,7 +14,7 @@ data class OrderEntity(
 data class OrderItemEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val orderId: Int,
-    val productId: Int,
+    val productId: String,
     val nombre: String,
     val precio: Double,
     val cantidad: Int,

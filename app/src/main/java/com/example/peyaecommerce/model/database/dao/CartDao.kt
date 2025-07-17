@@ -22,7 +22,7 @@ interface CartDao {
     suspend fun delete(cartItem: CartItemEntity)
 
     @Query("DELETE FROM cart_items WHERE productId = :productId")
-    suspend fun deleteByProductId(productId: Int)
+    suspend fun deleteByProductId(productId: String)
 
     @Query("SELECT * FROM cart_items")
     fun getAllItems(): Flow<List<CartItemEntity>>

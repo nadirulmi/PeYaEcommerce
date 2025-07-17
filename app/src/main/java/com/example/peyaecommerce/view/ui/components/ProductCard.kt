@@ -19,10 +19,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
+import com.example.peyaecommerce.model.data.remote.FoodDto
 import com.example.peyaecommerce.model.models.Product
 
 @Composable
-fun ProductCard(product: Product, onAddClick: () -> Unit) {
+fun ProductCard(
+    product: Product,
+    onAddClick: () -> Unit
+) {
     Card(
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -45,7 +50,8 @@ fun ProductCard(product: Product, onAddClick: () -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                if (product.destacado) {
+                // Si quieres mostrar algo especial (ej. producto con bebida)
+                if (product.hasDrink) {
                     Box(
                         modifier = Modifier
                             .align(Alignment.End)
@@ -58,7 +64,7 @@ fun ProductCard(product: Product, onAddClick: () -> Unit) {
                             .padding(horizontal = 10.dp, vertical = 4.dp)
                     ) {
                         Text(
-                            text = "Destacado",
+                            text = "Incluye bebida",
                             color = Color.White,
                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                         )
@@ -72,9 +78,9 @@ fun ProductCard(product: Product, onAddClick: () -> Unit) {
                         .padding(2.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = product.imagenResId),
-                        contentDescription = product.nombre,
-                        contentScale = ContentScale.Fit,
+                        painter = rememberAsyncImagePainter(product.imageUrl),
+                        contentDescription = product.name,
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .size(100.dp)
                             .clip(RoundedCornerShape(10.dp))
@@ -85,7 +91,7 @@ fun ProductCard(product: Product, onAddClick: () -> Unit) {
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = product.nombre,
+                    text = product.name,
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                     color = Color(0xFF4A0D22),
                     maxLines = 2,
@@ -102,7 +108,7 @@ fun ProductCard(product: Product, onAddClick: () -> Unit) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "$${product.precio}",
+                    text = "$${product.price}",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF7B2641)

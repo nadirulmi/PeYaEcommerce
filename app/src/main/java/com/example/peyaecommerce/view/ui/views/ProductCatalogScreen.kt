@@ -20,21 +20,33 @@ import androidx.compose.runtime.remember
 import com.example.peyaecommerce.view.viewmodel.ProductListViewModel
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.peyaecommerce.model.database.mappers.toProduct
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.peyaecommerce.view.ui.components.ProductCard
 import com.example.peyaecommerce.view.viewmodel.CartViewModel
+import com.example.peyaecommerce.R
 
 @Composable
 fun ProductCatalogScreen(
@@ -44,14 +56,12 @@ fun ProductCatalogScreen(
 ) {
     val products = productListViewModel.filteredProducts
     val searchQuery = productListViewModel.searchQuery
-    val selectedCategory = productListViewModel.selectedCategory
-    val priceOrder = productListViewModel.priceOrder
+    val isLoading = productListViewModel.isLoading
 
-    LaunchedEffect(Unit) {
-        productListViewModel.startCollecting()
-    }
-
-    Column{
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -70,58 +80,73 @@ fun ProductCatalogScreen(
             )
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Filtros
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.SpaceBetween
-//        ) {
-//            // Categoría
-//            DropdownMenuFiltro(
-//                label = "Categoría",
-//                options = listOf("Todos", "Comida"),
-//                selected = selectedCategory,
-//                onSelected = { viewModel.onCategorySelected(it) }
-//            )
-//
-//            // Precio
-//            DropdownMenuFiltro(
-//                label = "Precio",
-//                options = listOf("Ninguno", "Ascendente", "Descendente"),
-//                selected = priceOrder,
-//                onSelected = { viewModel.onPriceOrderSelected(it) }
-//            )
-//        }
-//
-//        Spacer(modifier = Modifier.height(16.dp))
-        Column(modifier = Modifier.padding(14.dp)) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+        if (isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+                contentAlignment = Alignment.Center
             ) {
-                items(products) { productEntity ->
-                    val product = productEntity.toProduct()
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(260.dp)
-                    ) {
-                        ProductCard(
-                            product = product,
-                            onAddClick = {
-                                println("Agregado: ${product.nombre}")
-                                cartViewModel.addToCart(product)
-                                Log.d("Carrito", "Items agregado: ${product}")
-                            }
-                        )
+                LottieAnimationLoader()
+            }
+        } else {
+            LazyRow(
+                modifier = Modifier
+                    //bg blanco
+                    .fillMaxWidth()
+                    .padding(horizontal = 14.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(productListViewModel.categories) { category ->
+                    FilterChip(
+                        selected = category == productListViewModel.selectedCategory,
+                        onClick = { productListViewModel.onCategorySelected(category) },
+                        label = { Text(category) }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Column(modifier = Modifier.padding(14.dp)) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(products) { product ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(260.dp)
+                        ) {
+                            ProductCard(
+                                product = product,
+                                onAddClick = {
+                                    cartViewModel.addToCart(product)
+                                }
+                            )
+                        }
                     }
                 }
             }
         }
-
     }
+}
+
+@Composable
+fun LottieAnimationLoader() {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loader))
+    val progress by animateLottieCompositionAsState(
+        composition,
+        iterations = LottieConstants.IterateForever
+    )
+
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+        modifier = Modifier.size(200.dp)
+    )
 }
 
 @Composable

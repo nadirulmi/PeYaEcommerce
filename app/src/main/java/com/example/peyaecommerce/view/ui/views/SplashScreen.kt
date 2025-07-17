@@ -11,7 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import com.airbnb.lottie.compose.*
 import com.example.peyaecommerce.R
-import com.example.peyaecommerce.model.database.populateDatabaseIfEmpty
 
 @Composable
 fun SplashScreen(
@@ -25,8 +24,6 @@ fun SplashScreen(
 
     LaunchedEffect(composition) {
         if (composition != null) {
-            populateDatabaseIfEmpty(context)
-
             animatable.animate(
                 composition = composition,
                 iterations = 1,

@@ -4,10 +4,11 @@ import com.example.peyaecommerce.model.models.CartItem
 import com.example.peyaecommerce.model.database.entities.CartItemEntity
 
 fun CartItem.toEntity(): CartItemEntity = CartItemEntity(
-    productId = product.id ?: 0,
-    nombre = product.nombre,
-    categoria = product.categoria,
-    precio = product.precio,
-    imagenResId = product.imagenResId,
+    productId = product.id ?: "",
+    nombre = product.name,
+    categoria = product.category,
+    precio = product.price,
+    imagenResId = product.imageResId,
+    imageUrl = product.imageUrl,
     cantidad = quantity
 )
