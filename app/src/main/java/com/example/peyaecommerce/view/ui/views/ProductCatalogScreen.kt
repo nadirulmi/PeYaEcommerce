@@ -1,27 +1,19 @@
 package com.example.peyaecommerce.view.ui.views
 
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
-import androidx.compose.runtime.remember
 import com.example.peyaecommerce.view.viewmodel.ProductListViewModel
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -35,18 +27,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.peyaecommerce.view.ui.components.ProductCard
 import com.example.peyaecommerce.view.viewmodel.CartViewModel
-import com.example.peyaecommerce.R
+import com.example.peyaecommerce.view.ui.components.MenuSkeletonLoader
 
 @Composable
 fun ProductCatalogScreen(
@@ -83,11 +69,11 @@ fun ProductCatalogScreen(
         if (isLoading) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(32.dp),
+                    .fillMaxSize(),
+
                 contentAlignment = Alignment.Center
             ) {
-                LottieAnimationLoader()
+                MenuSkeletonLoader()
             }
         } else {
             LazyRow(
@@ -105,8 +91,6 @@ fun ProductCatalogScreen(
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
 
             Column(modifier = Modifier.padding(14.dp)) {
                 LazyVerticalGrid(
@@ -128,48 +112,6 @@ fun ProductCatalogScreen(
                             )
                         }
                     }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun LottieAnimationLoader() {
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loader))
-    val progress by animateLottieCompositionAsState(
-        composition,
-        iterations = LottieConstants.IterateForever
-    )
-
-    LottieAnimation(
-        composition = composition,
-        progress = { progress },
-        modifier = Modifier.size(200.dp)
-    )
-}
-
-@Composable
-fun DropdownMenuFiltro(
-    label: String,
-    options: List<String>,
-    selected: String,
-    onSelected: (String) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    Column {
-        Text(text = label)
-        Box {
-            OutlinedButton(onClick = { expanded = true }) {
-                Text(selected)
-            }
-            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                options.forEach { option ->
-                    DropdownMenuItem(text = { Text(option) }, onClick = {
-                        onSelected(option)
-                        expanded = false
-                    })
                 }
             }
         }

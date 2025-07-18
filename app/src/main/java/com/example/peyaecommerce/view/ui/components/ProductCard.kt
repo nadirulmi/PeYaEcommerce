@@ -1,5 +1,6 @@
 package com.example.peyaecommerce.view.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -19,7 +20,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.example.peyaecommerce.R
 import com.example.peyaecommerce.model.data.remote.FoodDto
 import com.example.peyaecommerce.model.models.Product
 
@@ -28,92 +31,87 @@ fun ProductCard(
     product: Product,
     onAddClick: () -> Unit
 ) {
+
     Card(
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFF8F6F9)
-        ),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
             .padding(6.dp)
             .fillMaxWidth()
-            .height(260.dp)
+            .height(250.dp)
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .padding(14.dp)
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
+            // Imagen con badge
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
             ) {
-                // Si quieres mostrar algo especial (ej. producto con bebida)
+                val imagePainter = if (!product.imageUrl.isNullOrEmpty() && product.imageUrl.startsWith("http")) {
+                    rememberAsyncImagePainter(product.imageUrl)
+                } else {
+                    painterResource(id = R.drawable.image)
+                }
+
+                Image(
+                    painter = imagePainter,
+                    contentDescription = product.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(10.dp))
+                )
+
                 if (product.hasDrink) {
                     Box(
                         modifier = Modifier
-                            .align(Alignment.End)
+                            .align(Alignment.TopStart)
                             .background(
-                                brush = Brush.horizontalGradient(
-                                    listOf(Color(0xFFFFD700), Color(0xFFE3AE07))
-                                ),
-                                shape = RoundedCornerShape(8.dp)
+                                Color(0xFFFFD700),
+                                shape = RoundedCornerShape(bottomEnd = 8.dp)
                             )
-                            .padding(horizontal = 10.dp, vertical = 4.dp)
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {
                         Text(
                             text = "Incluye bebida",
                             color = Color.White,
-                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
                         )
                     }
-                    Spacer(modifier = Modifier.height(6.dp))
                 }
-
-                Box(
-                    modifier = Modifier
-                        .size(104.dp)
-                        .padding(2.dp)
-                ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(product.imageUrl),
-                        contentDescription = product.name,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(100.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .align(Alignment.Center)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Text(
-                    text = product.name,
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-                    color = Color(0xFF4A0D22),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 40.dp)
-                )
             }
 
+            Text(
+                text = product.name,
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                color = Color(0xFF4A0D22),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .height(40.dp)
+            )
+
             Row(
-                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "$${product.price}",
-                    style = MaterialTheme.typography.titleMedium.copy(
+                    style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF7B2641)
                     )
                 )
+
                 Button(
                     onClick = onAddClick,
                     shape = CircleShape,
@@ -132,4 +130,5 @@ fun ProductCard(
         }
     }
 }
+
 
