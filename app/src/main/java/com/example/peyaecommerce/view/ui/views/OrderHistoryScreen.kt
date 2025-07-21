@@ -1,11 +1,5 @@
 package com.example.peyaecommerce.view.ui.views
 
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.Fastfood
-import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.LocalDining
 import androidx.compose.material.icons.filled.LunchDining
 import androidx.compose.material.icons.filled.RestaurantMenu
