@@ -1,5 +1,6 @@
 package com.example.peyaecommerce.view.ui.views
 
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +28,7 @@ import androidx.compose.foundation.layout.*
 import android.graphics.ImageDecoder
 import android.os.Build
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.rememberScrollState
@@ -34,10 +36,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -53,7 +53,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.LaunchedEffect
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import com.example.peyaecommerce.model.models.Profile
+import java.io.File
+import android.Manifest
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material3.CircularProgressIndicator
 
 @Composable
 fun ProfileScreen(
@@ -69,11 +75,43 @@ fun ProfileScreen(
     var showSavedDialog by remember { mutableStateOf(false) }
     val isImageUploading by profileViewModel.isImageUploading.collectAsState()
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+
+    var showImageSourceDialog by remember { mutableStateOf(false) }
+
     val context = LocalContext.current
+
+    val cameraImageUri = remember {
+        FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.provider",
+            File(context.cacheDir, "profile_image.jpg")
+        )
+    }
+
+    val takePhotoLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) { success ->
+        if (success) {
+            imageUri = cameraImageUri
+        }
+    }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? -> imageUri = uri }
+    ) { uri: Uri? ->
+        imageUri = uri
+    }
+
+    // Launcher para permisos de cámara
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            takePhotoLauncher.launch(cameraImageUri)
+        } else {
+            Toast.makeText(context, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     LaunchedEffect(isImageUploading) {
         if (!isImageUploading && imageUri != null) {
@@ -124,8 +162,7 @@ fun ProfileScreen(
                     Card(
                         modifier = Modifier
                             .size(140.dp)
-                            .clip(CircleShape)
-                            .clickable { imagePickerLauncher.launch("image/*") },
+                            .clip(CircleShape),
                     ) {
                         val bitmap = remember(imageUri) {
                             imageUri?.let { uri ->
@@ -153,16 +190,15 @@ fun ProfileScreen(
                         contentDescription = profile.name,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .size(120.dp)
+                            .size(140.dp)
                             .clip(CircleShape)
-                            .clickable { imagePickerLauncher.launch("image/*") }
                     )
                 } else {
                     Card(
                         modifier = Modifier
+                            .clickable { showImageSourceDialog = true }
                             .size(140.dp)
-                            .clip(CircleShape)
-                            .clickable { imagePickerLauncher.launch("image/*") },
+                            .clip(CircleShape),
                     ) {
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -177,6 +213,44 @@ fun ProfileScreen(
                         }
                     }
                 }
+
+                Spacer(Modifier.height(16.dp))
+            }
+
+            if (showImageSourceDialog) {
+                AlertDialog(
+                    onDismissRequest = { showImageSourceDialog = false },
+                    title = { Text("Selecciona la fuente de la imagen") },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                showImageSourceDialog = false
+                                imagePickerLauncher.launch("image/*")
+                            }
+                        ) {
+                            Text("Galería")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = {
+                                showImageSourceDialog = false
+                                if (ContextCompat.checkSelfPermission(
+                                        context,
+                                        Manifest.permission.CAMERA
+                                    ) ==
+                                    PackageManager.PERMISSION_GRANTED
+                                ) {
+                                    takePhotoLauncher.launch(cameraImageUri)
+                                } else {
+                                    cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                                }
+                            }
+                        ) {
+                            Text("Cámara")
+                        }
+                    }
+                )
             }
         }
 

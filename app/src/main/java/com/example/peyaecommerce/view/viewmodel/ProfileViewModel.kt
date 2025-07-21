@@ -66,7 +66,8 @@ class ProfileViewModel @Inject constructor(
                     mapOf("upload_preset" to "dqczp7b2h")
                 )
                 val imageUrl = uploadResult["secure_url"] as String
-                _profile.value = _profile.value.copy(image = imageUrl)
+                val imageUrlWithCacheBuster = "$imageUrl?ts=${System.currentTimeMillis()}"
+                _profile.value = _profile.value.copy(image = imageUrlWithCacheBuster)
             } catch (e: Exception) {
                 Log.e("ProfileViewModel", "Error uploading image: ${e.message}")
             } finally {
