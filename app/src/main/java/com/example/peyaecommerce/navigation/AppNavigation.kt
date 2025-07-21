@@ -51,11 +51,11 @@ fun AppNavigation() {
                 BottomBar(navController = navController)
             }
         }
-    ) { _ ->
+    ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = Routes.SPLASH,
-            modifier = Modifier.padding(bottom = 0.dp)
+            modifier = Modifier.padding(innerPadding)
         ) {
             composable(Routes.SPLASH) {
                 SplashScreen(
