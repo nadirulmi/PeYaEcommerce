@@ -168,7 +168,6 @@ fun RegisterScreen(
 
                 Spacer(Modifier.height(24.dp))
 
-                // Botón de registro
                 Button(
                     onClick = {
                         focusManager.clearFocus()
