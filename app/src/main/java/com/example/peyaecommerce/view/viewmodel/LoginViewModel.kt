@@ -1,7 +1,5 @@
 package com.example.peyaecommerce.view.viewmodel
 
-
-import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -87,7 +85,6 @@ class LoginViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     val user = response.body()?.user
                     if (user != null) {
-                        Log.d("LoginViewModel", "Usuario logueado: $user")
                         userPreferences.saveUser(user)
                     }
                     loginMessage = "Login exitoso"

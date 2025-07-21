@@ -1,6 +1,5 @@
 package com.example.peyaecommerce.view.ui.views
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,8 +36,6 @@ fun OrderHistoryScreen(
     orderHistoryViewModel: OrderHistoryViewModel = hiltViewModel()
 ) {
     val orders by orderHistoryViewModel.orders.collectAsState(initial = emptyList())
-
-    Log.d("Ordenes", "Cargando historial de órdenes: ${orders}")
 
     Column(
         modifier = Modifier

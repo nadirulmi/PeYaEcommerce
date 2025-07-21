@@ -27,12 +27,10 @@ import androidx.compose.foundation.layout.*
 import android.graphics.ImageDecoder
 import android.os.Build
 import android.provider.MediaStore
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
@@ -55,7 +53,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.text.style.TextAlign
 import com.example.peyaecommerce.model.models.Profile
 
 @Composable
@@ -238,9 +235,7 @@ fun ProfileScreen(
     }
 }
 
-
-
-// Composable para TextField minimalista
+// Composable para TextField
 @Composable
 fun MinimalTextField(
     label: String,

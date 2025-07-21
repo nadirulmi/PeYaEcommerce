@@ -1,5 +1,5 @@
 package com.example.peyaecommerce.view.ui.views
-import android.util.Log
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,7 +12,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.peyaecommerce.view.viewmodel.LoginViewModel
 import androidx.compose.foundation.clickable
@@ -30,7 +29,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.peyaecommerce.R
-import kotlinx.coroutines.delay
 
 @Composable
 fun LoginScreen(
@@ -55,7 +53,6 @@ fun LoginScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Imagen de fondo que ocupa toda la pantalla
         Image(
             painter = painterResource(id = R.drawable.food4),
             contentDescription = "Fondo de comida",
@@ -63,7 +60,6 @@ fun LoginScreen(
             modifier = Modifier.fillMaxSize()
         )
 
-        // Card del formulario centrada
         Column(
             modifier = Modifier
                 .align(Alignment.Center)

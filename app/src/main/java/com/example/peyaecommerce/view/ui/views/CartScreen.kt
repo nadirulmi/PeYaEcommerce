@@ -1,6 +1,5 @@
 package com.example.peyaecommerce.view.ui.views
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -204,7 +203,6 @@ fun CartItemRow(
     onRemove: () -> Unit,
     onQuantityChange: (Int) -> Unit
 ) {
-    Log.d("CartItem", "Product: ${item.product}")
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),

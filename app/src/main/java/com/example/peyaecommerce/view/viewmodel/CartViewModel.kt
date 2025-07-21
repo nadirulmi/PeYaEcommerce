@@ -7,14 +7,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.peyaecommerce.model.data.remote.FoodDto
 import com.example.peyaecommerce.model.models.CartItem
 import com.example.peyaecommerce.model.models.Product
 import com.example.peyaecommerce.model.database.entities.OrderEntity
 import com.example.peyaecommerce.model.database.entities.OrderItemEntity
 import com.example.peyaecommerce.model.database.ProductDataBase
 import com.example.peyaecommerce.model.database.mappers.toEntity
-import com.example.peyaecommerce.model.database.mappers.toProduct
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -49,7 +47,6 @@ class CartViewModel @Inject constructor(
                         quantity = entity.cantidad
                     )
                 }
-                Log.d("Carrito", "Carrito cargado desde Room: ${cartItems.size} items")
             }
         }
     }
@@ -107,8 +104,6 @@ class CartViewModel @Inject constructor(
                     )
                 }
                 orderDao.insertOrderItems(items)
-
-                Log.d("Checkout", "Orden creada: ID $orderId, Total $total")
 
                 cartDao.clearCart()
                 clearCart()

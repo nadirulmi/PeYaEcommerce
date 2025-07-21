@@ -1,22 +1,15 @@
 package com.example.peyaecommerce.view.viewmodel
 
-import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.peyaecommerce.model.data.remote.ApiService
-import com.example.peyaecommerce.model.data.remote.FoodDto
-import com.example.peyaecommerce.model.database.ProductDataBase
-import com.example.peyaecommerce.model.database.entities.ProductEntity
 import com.example.peyaecommerce.model.database.mappers.toProduct
 import com.example.peyaecommerce.model.models.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -52,8 +45,6 @@ class ProductListViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     products = response.body()?.map { it.toProduct() }.orEmpty()
                     filterProducts()
-                } else {
-                    Log.e("API_TEST", "Error en la respuesta: ${response.code()}")
                 }
             } catch (e: Exception) {
                 Log.e("API_TEST", "Error al hacer la petición", e)
@@ -70,11 +61,6 @@ class ProductListViewModel @Inject constructor(
 
     fun onCategorySelected(category: String) {
         selectedCategory = category
-        filterProducts()
-    }
-
-    fun onPriceOrderSelected(order: String) {
-        priceOrder = order
         filterProducts()
     }
 
