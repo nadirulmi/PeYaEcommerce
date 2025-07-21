@@ -10,7 +10,6 @@ class ProfileData @Inject constructor() : ProfileDataSource {
         name = "Usuario",
         lastName = "prueba",
         email = "test@gmail.com",
-        password = "pass1234",
         nationality = "Argentina"
     )
 

@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.cloudinary.Cloudinary
+import com.example.peyaecommerce.model.data.remote.UserPreferences
 import com.example.peyaecommerce.model.repository.ProfileDataSource
 import com.example.peyaecommerce.model.models.Profile
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,26 +19,35 @@ import kotlinx.coroutines.flow.StateFlow
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    val myApp: Application,
-    val cloudinary: Cloudinary,
-    private val profileDataSource: ProfileDataSource
-): AndroidViewModel(myApp) {
+    private val cloudinary: Cloudinary,
+    private val userPreferences: UserPreferences,
+    application: Application
+) : AndroidViewModel(application) {
 
     private val _profile = MutableStateFlow(Profile())
-    val profile: MutableStateFlow<Profile> = _profile
+    val profile: StateFlow<Profile> = _profile
 
     private val _isImageUploading = MutableStateFlow(false)
     val isImageUploading: StateFlow<Boolean> = _isImageUploading
 
-
-    init{
-        loadUserProfile()
+    init {
+        observeUserPreferences()
     }
 
-    private fun loadUserProfile() {
+    private fun observeUserPreferences() {
         viewModelScope.launch {
-            delay(150)
-            _profile.value = profileDataSource.getProfileInfo()
+            userPreferences.userFlow.collect { userDto ->
+                val parts = userDto.fullName.split(" ")
+                val name = parts.firstOrNull() ?: ""
+                val lastName = parts.drop(1).joinToString(" ")
+
+                _profile.value = _profile.value.copy(
+                    name = name,
+                    lastName = lastName,
+                    email = userDto.email,
+                    nationality = if (userDto.nationality.isNotEmpty()) userDto.nationality else _profile.value.nationality
+                )
+            }
         }
     }
 
@@ -48,18 +58,17 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun uploadImageToCloudinary(uri: Uri){
-        viewModelScope.launch(Dispatchers.IO){
+    private fun uploadImageToCloudinary(uri: Uri) {
+        viewModelScope.launch(Dispatchers.IO) {
             _isImageUploading.value = true
             try {
-               val inputStream = getApplication<Application>().contentResolver.openInputStream(uri)
+                val inputStream = getApplication<Application>().contentResolver.openInputStream(uri)
                 val uploadResult = cloudinary.uploader().upload(
                     inputStream,
                     mapOf("upload_preset" to "dqczp7b2h")
                 )
                 val imageUrl = uploadResult["secure_url"] as String
-                val updateProfile = _profile.value.copy(image = imageUrl)
-                _profile.value = updateProfile
+                _profile.value = _profile.value.copy(image = imageUrl)
             } catch (e: Exception) {
                 Log.e("ProfileViewModel", "Error uploading image: ${e.message}")
             } finally {

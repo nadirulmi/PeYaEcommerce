@@ -28,13 +28,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.peyaecommerce.R
 import kotlinx.coroutines.delay
 
 @Composable
 fun LoginScreen(
     navController: NavHostController,
-    viewModel: LoginViewModel = viewModel()
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     val email = viewModel.email
     val password = viewModel.password
@@ -164,16 +165,22 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = {
-                    viewModel.doLogin()
-                },
-                enabled = isButtonEnabled,
+                onClick = { viewModel.doLogin() },
+                enabled = isButtonEnabled && !viewModel.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7B2641))
             ) {
-                Text("Iniciar sesión", fontSize = 16.sp)
+                if (viewModel.isLoading) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        strokeWidth = 2.dp,
+                        modifier = Modifier.size(20.dp)
+                    )
+                } else {
+                    Text("Iniciar sesión", fontSize = 16.sp)
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -188,6 +195,18 @@ fun LoginScreen(
                 }
             )
         }
+    }
+    if (loginMessage != null && loginMessage != "Login exitoso") {
+        AlertDialog(
+            onDismissRequest = { viewModel.clearLoginMessage() },
+            title = { Text("Error") },
+            text = { Text(loginMessage) },
+            confirmButton = {
+                TextButton(onClick = { viewModel.clearLoginMessage() }) {
+                    Text("OK")
+                }
+            }
+        )
     }
 }
 

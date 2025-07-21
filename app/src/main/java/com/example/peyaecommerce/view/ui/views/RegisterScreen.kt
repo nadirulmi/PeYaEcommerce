@@ -10,12 +10,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -32,8 +36,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.peyaecommerce.R
@@ -45,9 +51,16 @@ import com.example.peyaecommerce.view.viewmodel.RegisterViewModel
 @Composable
 fun RegisterScreen(
     navController: NavHostController,
-    viewModel: RegisterViewModel = viewModel()
+    viewModel: RegisterViewModel = hiltViewModel()
 ) {
     val focusManager = LocalFocusManager.current
+
+    val showDialog = remember { mutableStateOf(false) }
+    val registrationMessage = viewModel.registrationMessage
+
+    LaunchedEffect(registrationMessage) {
+        showDialog.value = registrationMessage != null
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -69,35 +82,44 @@ fun RegisterScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
-
             ) {
                 Text(
                     text = "Crear cuenta",
                     style = MaterialTheme.typography.headlineSmall.copy(
                         fontSize = 28.sp,
                         color = Color(0xFF7B2641),
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Bold
                     ),
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
 
-                // Nombre completo
+                // Nombre
                 OutlinedTextField(
-                    value = viewModel.fullName,
-                    onValueChange = viewModel::onFullNameChange,
-                    placeholder = { Text("Nombre completo") },
-                    isError = viewModel.fullNameError != null,
+                    value = viewModel.name,
+                    onValueChange = viewModel::onNameChange,
+                    placeholder = { Text("Nombre") },
+                    isError = viewModel.nameError != null,
                     singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    shape = RoundedCornerShape(12.dp)
                 )
-                viewModel.fullNameError?.let {
-                    Text(text = it, color = Color.Red, style = MaterialTheme.typography.bodySmall)
-                }
+                viewModel.nameError?.let { Text(it, color = Color.Red) }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(Modifier.height(12.dp))
+
+                // Apellido
+                OutlinedTextField(
+                    value = viewModel.lastName,
+                    onValueChange = viewModel::onLastNameChange,
+                    placeholder = { Text("Apellido") },
+                    isError = viewModel.lastNameError != null,
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    shape = RoundedCornerShape(12.dp)
+                )
+                viewModel.lastNameError?.let { Text(it, color = Color.Red) }
+
+                Spacer(Modifier.height(12.dp))
 
                 // Email
                 OutlinedTextField(
@@ -106,17 +128,27 @@ fun RegisterScreen(
                     placeholder = { Text("Email") },
                     isError = viewModel.emailError != null,
                     singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
                     shape = RoundedCornerShape(12.dp),
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email)
                 )
-                viewModel.emailError?.let {
-                    Text(text = it, color = Color.Red, style = MaterialTheme.typography.bodySmall)
-                }
+                viewModel.emailError?.let { Text(it, color = Color.Red) }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(Modifier.height(12.dp))
+
+                // Nacionalidad
+                OutlinedTextField(
+                    value = viewModel.nationality,
+                    onValueChange = viewModel::onNationalityChange,
+                    placeholder = { Text("Nacionalidad") },
+                    isError = viewModel.nationalityError != null,
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    shape = RoundedCornerShape(12.dp)
+                )
+                viewModel.nationalityError?.let { Text(it, color = Color.Red) }
+
+                Spacer(Modifier.height(12.dp))
 
                 // Contraseña
                 OutlinedTextField(
@@ -125,17 +157,14 @@ fun RegisterScreen(
                     placeholder = { Text("Contraseña") },
                     isError = viewModel.passwordError != null,
                     singleLine = true,
-                    visualTransformation = VisualTransformation.None,                    modifier = Modifier
-                        .fillMaxWidth() // Ocupa el 90% del ancho, más compacto
-                        .height(56.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password)
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    shape = RoundedCornerShape(12.dp)
                 )
-                viewModel.passwordError?.let {
-                    Text(text = it, color = Color.Red, style = MaterialTheme.typography.bodySmall)
-                }
+                viewModel.passwordError?.let { Text(it, color = Color.Red) }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(Modifier.height(12.dp))
 
                 // Confirmar contraseña
                 OutlinedTextField(
@@ -144,19 +173,14 @@ fun RegisterScreen(
                     placeholder = { Text("Confirmar contraseña") },
                     isError = viewModel.confirmPasswordError != null,
                     singleLine = true,
-                    visualTransformation = VisualTransformation.None,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-
-                    shape = RoundedCornerShape(12.dp),
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password)
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    shape = RoundedCornerShape(12.dp)
                 )
-                viewModel.confirmPasswordError?.let {
-                    Text(text = it, color = Color.Red, style = MaterialTheme.typography.bodySmall)
-                }
+                viewModel.confirmPasswordError?.let { Text(it, color = Color.Red) }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(Modifier.height(24.dp))
 
                 // Botón de registro
                 Button(
@@ -164,19 +188,25 @@ fun RegisterScreen(
                         focusManager.clearFocus()
                         viewModel.doRegister()
                     },
-                    enabled = viewModel.isButtonEnabled,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
+                    enabled = viewModel.isButtonEnabled && !viewModel.isLoading,
+                    modifier = Modifier.fillMaxWidth().height(48.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (viewModel.isButtonEnabled) Bordo500 else Bordo200
+                        containerColor = if (viewModel.isButtonEnabled) Color(0xFF800020) else Color.Gray
                     ),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Registrarse", color = Color.White)
+                    if (viewModel.isLoading) {
+                        CircularProgressIndicator(
+                            color = Color.White,
+                            strokeWidth = 2.dp,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    } else {
+                        Text("Registrarse", color = Color.White)
+                    }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(Modifier.height(16.dp))
 
                 Text(
                     text = "¿Ya tenés cuenta? Inicia sesión",
@@ -187,19 +217,82 @@ fun RegisterScreen(
                         }
                     }
                 )
-
-                // Mensaje de registro
-                AnimatedVisibility(viewModel.registrationMessage != null) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = viewModel.registrationMessage.orEmpty(),
-                        color = if (viewModel.registrationMessage?.contains("exitoso") == true) Color(
-                            0xFF2E7D32
-                        ) else Color.Red,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
             }
         }
+        if (showDialog.value) {
+            val isSuccess = registrationMessage?.contains("exitoso", ignoreCase = true) == true
+
+            AlertDialog(
+                onDismissRequest = { showDialog.value = false },
+                title = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        val icon: ImageVector
+                        val iconTint: Color
+                        val titleText: String
+
+                        if (isSuccess) {
+                            icon = Icons.Default.CheckCircle
+                            iconTint = Color(0xFF2E7D32)
+                            titleText = "¡Éxito!"
+                        } else {
+                            icon = Icons.Default.Error
+                            iconTint = Color(0xFFD32F2F)
+                            titleText = "Error"
+                        }
+
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null,
+                            tint = iconTint,
+                            modifier = Modifier.size(28.dp)
+                        )
+
+                        Spacer(Modifier.width(8.dp))
+
+                        Text(
+                            text = titleText,
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                color = iconTint,
+                                fontWeight = FontWeight.Bold
+                            ),
+                        )
+                    }
+                },
+                text = {
+                    Text(
+                        text = registrationMessage ?: "",
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showDialog.value = false
+                            viewModel.clearRegistrationMessage()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "OK",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = if (isSuccess) Color(0xFF2E7D32) else Color(0xFFD32F2F),
+                            modifier = Modifier.align(Alignment.CenterVertically),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                },
+                shape = RoundedCornerShape(16.dp),
+                containerColor = MaterialTheme.colorScheme.surface,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
     }
+
 }
+

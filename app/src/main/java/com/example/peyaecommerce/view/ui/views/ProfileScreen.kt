@@ -67,20 +67,16 @@ fun ProfileScreen(
     var name by remember(profile.name) { mutableStateOf(profile.name) }
     var lastName by remember(profile.lastName) { mutableStateOf(profile.lastName) }
     var email by remember(profile.email) { mutableStateOf(profile.email) }
-    var password by remember(profile.password) { mutableStateOf(profile.password) }
     var nationality by remember(profile.nationality) { mutableStateOf(profile.nationality) }
 
     var showSavedDialog by remember { mutableStateOf(false) }
-
     val isImageUploading by profileViewModel.isImageUploading.collectAsState()
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        imageUri = uri
-    }
+    ) { uri: Uri? -> imageUri = uri }
 
     LaunchedEffect(isImageUploading) {
         if (!isImageUploading && imageUri != null) {
@@ -89,11 +85,11 @@ fun ProfileScreen(
         }
     }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .verticalScroll(rememberScrollState())
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -112,34 +108,17 @@ fun ProfileScreen(
                     AlertDialog(
                         onDismissRequest = {},
                         confirmButton = {},
-                        title = {
-                            Text(
-                                text = "Subiendo Imagen...",
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                        },
+                        title = { Text("Subiendo Imagen...") },
                         text = {
                             Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                CircularProgressIndicator(
-                                    color = MaterialTheme.colorScheme.primary,
-                                    strokeWidth = 4.dp
-                                )
-                                Text(
-                                    text = "Por favor espera mientras subimos tu imagen.",
-                                    textAlign = TextAlign.Center,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
+                                CircularProgressIndicator()
+                                Spacer(Modifier.height(8.dp))
+                                Text("Por favor espera mientras subimos tu imagen.")
                             }
-                        },
-                        shape = RoundedCornerShape(16.dp),
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        tonalElevation = 8.dp,
+                        }
                     )
                 }
 
@@ -148,8 +127,6 @@ fun ProfileScreen(
                         modifier = Modifier
                             .size(140.dp)
                             .clip(CircleShape)
-                            .background(Color.Gray)
-                            .animateContentSize()
                             .clickable { imagePickerLauncher.launch("image/*") },
                     ) {
                         val bitmap = remember(imageUri) {
@@ -180,7 +157,6 @@ fun ProfileScreen(
                         modifier = Modifier
                             .size(120.dp)
                             .clip(CircleShape)
-                            .background(Color.Gray)
                             .clickable { imagePickerLauncher.launch("image/*") }
                     )
                 } else {
@@ -188,7 +164,6 @@ fun ProfileScreen(
                         modifier = Modifier
                             .size(140.dp)
                             .clip(CircleShape)
-                            .background(Color.Gray)
                             .clickable { imagePickerLauncher.launch("image/*") },
                     ) {
                         Box(
@@ -203,7 +178,6 @@ fun ProfileScreen(
                             )
                         }
                     }
-
                 }
             }
         }
@@ -212,9 +186,7 @@ fun ProfileScreen(
             AlertDialog(
                 onDismissRequest = { showSavedDialog = false },
                 confirmButton = {
-                    TextButton(onClick = { showSavedDialog = false }) {
-                        Text("OK")
-                    }
+                    TextButton(onClick = { showSavedDialog = false }) { Text("OK") }
                 },
                 icon = {
                     Icon(
@@ -225,17 +197,12 @@ fun ProfileScreen(
                     )
                 },
                 title = { Text("Cambios Guardados") },
-                text = { Text("Tu perfil se actualizó correctamente.") },
-                shape = RoundedCornerShape(16.dp),
-                containerColor = MaterialTheme.colorScheme.surface,
-                tonalElevation = 8.dp,
+                text = { Text("Tu perfil se actualizó correctamente.") }
             )
         }
 
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Campos minimalistas
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -245,7 +212,6 @@ fun ProfileScreen(
             MinimalTextField("Nombre", name) { name = it }
             MinimalTextField("Apellido", lastName) { lastName = it }
             MinimalTextField("Correo Electrónico", email) { email = it }
-            MinimalTextField("Contraseña", password, isPassword = true) { password = it }
             MinimalTextField("Nacionalidad", nationality) { nationality = it }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -256,9 +222,8 @@ fun ProfileScreen(
                         name = name,
                         lastName = lastName,
                         email = email,
-                        password = password,
                         nationality = nationality,
-                        image= profile.image
+                        image = profile.image
                     )
                     profileViewModel.updateProfile(updateProfile, imageUri)
                 },
@@ -272,6 +237,7 @@ fun ProfileScreen(
         }
     }
 }
+
 
 
 // Composable para TextField minimalista

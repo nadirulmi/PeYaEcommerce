@@ -6,6 +6,7 @@ import com.example.peyaecommerce.model.database.dao.OrderDao
 import com.example.peyaecommerce.model.database.dao.ProductDao
 import com.example.peyaecommerce.model.database.ProductDataBase
 import com.example.peyaecommerce.model.data.ProfileData
+import com.example.peyaecommerce.model.data.remote.UserPreferences
 import com.example.peyaecommerce.model.repository.ProfileDataSource
 import dagger.Module
 import dagger.Provides
@@ -42,5 +43,11 @@ object AppModule {
     @Provides
     fun provideOrderDao(db: ProductDataBase): OrderDao {
         return db.orderDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserPreferences(@ApplicationContext context: Context): UserPreferences {
+        return UserPreferences(context)
     }
 }

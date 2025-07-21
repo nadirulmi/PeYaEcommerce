@@ -167,4 +167,7 @@ dependencies {
     //Icons
     implementation("androidx.compose.material:material-icons-extended:<versión>")
 
+    implementation("androidx.datastore:datastore-preferences:1.1.0")
+
+
 }

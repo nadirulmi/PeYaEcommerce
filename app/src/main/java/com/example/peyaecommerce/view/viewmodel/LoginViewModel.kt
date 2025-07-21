@@ -7,8 +7,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.peyaecommerce.model.data.remote.ApiService
+import com.example.peyaecommerce.model.data.remote.LoginRequest
+import com.example.peyaecommerce.model.data.remote.UserPreferences
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import org.json.JSONObject
+import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val apiService: ApiService,
+    private val userPreferences: UserPreferences
+) : ViewModel() {
 
     var email by mutableStateOf("")
     var password by mutableStateOf("")
@@ -16,6 +28,11 @@ class LoginViewModel : ViewModel() {
     var passwordError by mutableStateOf<String?>(null)
     var isButtonEnabled by mutableStateOf(false)
     var loginMessage by mutableStateOf<String?>(null)
+    var isLoading by mutableStateOf(false)
+
+    fun clearLoginMessage() {
+        loginMessage = null
+    }
 
     private var hasEmailBeenTouched by mutableStateOf(false)
     private var hasPasswordBeenTouched by mutableStateOf(false)
@@ -55,11 +72,40 @@ class LoginViewModel : ViewModel() {
     }
 
     fun doLogin() {
-        if (email == "test@test.com" && password == "12345678") {
-            Log.d("LoginViewModel", "Login exitoso")
-            loginMessage = "Login exitoso"
-        } else {
-            loginMessage = "Credenciales incorrectas"
+        if (!isButtonEnabled) {
+            loginMessage = "Completa los campos correctamente"
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                isLoading = true
+                loginMessage = null
+                val request = LoginRequest(email = email, encryptedPassword = password)
+                val response = apiService.loginUser(request)
+
+                if (response.isSuccessful) {
+                    val user = response.body()?.user
+                    if (user != null) {
+                        Log.d("LoginViewModel", "Usuario logueado: $user")
+                        userPreferences.saveUser(user)
+                    }
+                    loginMessage = "Login exitoso"
+                } else {
+                    val errorBodyString = response.errorBody()?.string()
+                    val errorMessage = try {
+                        val jsonObj = JSONObject(errorBodyString ?: "")
+                        jsonObj.getString("message")
+                    } catch (e: Exception) {
+                        errorBodyString ?: "Error desconocido"
+                    }
+                    loginMessage = "Error: $errorMessage"
+                }
+            } catch (e: Exception) {
+                loginMessage = "Error: ${e.message}"
+            } finally {
+                isLoading = false
+            }
         }
     }
 }
