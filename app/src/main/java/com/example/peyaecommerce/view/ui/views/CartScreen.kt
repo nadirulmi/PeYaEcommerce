@@ -54,7 +54,7 @@ fun CartScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
                 .padding(paddingValues)
         ) {
             Column(
@@ -65,7 +65,7 @@ fun CartScreen(
                 if(cartItems.isNotEmpty()) {
                     Text(
                         text = "Shopping Cart",
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
                     )
                     Text(
                         text = "${cartItems.sumOf { it.quantity }} items",

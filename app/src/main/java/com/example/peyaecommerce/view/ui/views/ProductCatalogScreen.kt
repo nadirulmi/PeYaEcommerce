@@ -24,8 +24,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,6 +39,7 @@ import androidx.navigation.NavController
 import com.example.peyaecommerce.view.ui.components.ProductCard
 import com.example.peyaecommerce.view.viewmodel.CartViewModel
 import com.example.peyaecommerce.view.ui.components.MenuSkeletonLoader
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProductCatalogScreen(
@@ -44,72 +51,84 @@ fun ProductCatalogScreen(
     val searchQuery = productListViewModel.searchQuery
     val isLoading = productListViewModel.isLoading
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = Color(0xFF4A0D22),
-                    shape = RoundedCornerShape(
-                        bottomStart = 16.dp,
-                        bottomEnd = 16.dp
-                    )
-                )
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-        ) {
-            SearchBar(
-                query = searchQuery,
-                onQueryChange = { productListViewModel.onSearchQueryChange(it) }
-            )
-        }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
-        if (isLoading) {
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+        ) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize(),
-
-                contentAlignment = Alignment.Center
-            ) {
-                MenuSkeletonLoader()
-            }
-        } else {
-            LazyRow(
-                modifier = Modifier
-                    //bg blanco
                     .fillMaxWidth()
-                    .padding(horizontal = 14.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(productListViewModel.categories) { category ->
-                    FilterChip(
-                        selected = category == productListViewModel.selectedCategory,
-                        onClick = { productListViewModel.onCategorySelected(category) },
-                        label = { Text(category) }
+                    .background(
+                        color = Color(0xFF4A0D22),
+                        shape = RoundedCornerShape(
+                            bottomStart = 16.dp,
+                            bottomEnd = 16.dp
+                        )
                     )
-                }
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+            ) {
+                SearchBar(
+                    query = searchQuery,
+                    onQueryChange = { productListViewModel.onSearchQueryChange(it) }
+                )
             }
 
-            Column(modifier = Modifier.padding(14.dp)) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+            if (isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+
+                    contentAlignment = Alignment.Center
                 ) {
-                    items(products) { product ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(260.dp)
-                        ) {
-                            ProductCard(
-                                product = product,
-                                onAddClick = {
-                                    cartViewModel.addToCart(product)
-                                }
-                            )
+                    MenuSkeletonLoader()
+                }
+            } else {
+                LazyRow(
+                    modifier = Modifier
+                        //bg blanco
+                        .fillMaxWidth()
+                        .padding(horizontal = 14.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(productListViewModel.categories) { category ->
+                        FilterChip(
+                            selected = category == productListViewModel.selectedCategory,
+                            onClick = { productListViewModel.onCategorySelected(category) },
+                            label = { Text(category) }
+                        )
+                    }
+                }
+
+                Column(modifier = Modifier.padding(14.dp)) {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(products) { product ->
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(260.dp)
+                            ) {
+                                ProductCard(
+                                    product = product,
+                                    onAddClick = {
+                                        cartViewModel.addToCart(product)
+                                        coroutineScope.launch {
+                                            snackbarHostState.showSnackbar("${product.name} añadido al carrito")
+                                        }
+                                    }
+                                )
+                            }
                         }
                     }
                 }
