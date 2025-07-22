@@ -2,7 +2,7 @@
 
 Proyecto integrador para la pasantía de Henry + PedidosYa.
 
-<img width="375" height="921" alt="{D913098A-E133-400E-82E7-822C637F2C6C}" src="https://github.com/user-attachments/assets/6dadb9c6-9e6e-4836-a625-c0eb89a9659c" />
+<img width="300" height="850" alt="{D913098A-E133-400E-82E7-822C637F2C6C}" src="https://github.com/user-attachments/assets/6dadb9c6-9e6e-4836-a625-c0eb89a9659c" />
 
 ## Descripción
 
